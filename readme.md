@@ -8,7 +8,7 @@
 <body>
 <h1>Completing the Square</h1>
 <p>
-<img src="PLACEHOLDER_FOR_SCREENSHOT_IMAGE.png" alt="Screenshot of Completing the Square App">
+<img src="image.png" alt="Screenshot of Completing the Square App">
 </p>
 <p>
 <a href="https://github.com/Sudo-Aju/CTS_prog/blob/main/dist/completing-the-square-1.0.0-arm64.dmg"><strong>Download CompletingTheSquare.dmg</strong></a>

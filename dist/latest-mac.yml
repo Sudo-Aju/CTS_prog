@@ -1,0 +1,11 @@
+version: 1.0.0
+files:
+  - url: completing-the-square-1.0.0-arm64-mac.zip
+    sha512: PcRkfBQoh5VhyWm1oUbEVzZWbk75N+ENOtoiNYSCEhVGS2SmUVh0yeXEuewiAtvHXXhwopaFonLWQACJuF4nwA==
+    size: 97003689
+  - url: completing-the-square-1.0.0-arm64.dmg
+    sha512: sNy5/xMrqt/L1CAEoQxHQmEEMwj60tvQVWiqZr58hBxcuvtTmxFn9MmfMJ8LbcnsPCmnv5dJwyLkEtNwWWfySg==
+    size: 100380065
+path: completing-the-square-1.0.0-arm64-mac.zip
+sha512: PcRkfBQoh5VhyWm1oUbEVzZWbk75N+ENOtoiNYSCEhVGS2SmUVh0yeXEuewiAtvHXXhwopaFonLWQACJuF4nwA==
+releaseDate: '2025-12-11T06:06:33.141Z'

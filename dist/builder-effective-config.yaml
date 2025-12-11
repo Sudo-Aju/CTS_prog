@@ -1,0 +1,10 @@
+directories:
+  output: dist
+  buildResources: build
+appId: com.sudospot.completingthesquare
+mac:
+  category: public.app-category.education
+win:
+  target: nsis
+files: []
+electronVersion: 28.3.3

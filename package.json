@@ -1,0 +1,26 @@
+{
+    "name": "completing-the-square",
+    "version": "1.0.0",
+    "description": "Visual interactive proof of completing the square",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "pack": "electron-builder --dir",
+        "dist": "electron-builder"
+    },
+    "author": "Antigravity",
+    "license": "MIT",
+    "devDependencies": {
+        "electron": "^28.0.0",
+        "electron-builder": "^24.0.0"
+    },
+    "build": {
+        "appId": "com.sudospot.completingthesquare",
+        "mac": {
+            "category": "public.app-category.education"
+        },
+        "win": {
+            "target": "nsis"
+        }
+    }
+}

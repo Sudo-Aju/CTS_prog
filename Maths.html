@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, intial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Completing the Square Visualization</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700&display=swap"
         rel="stylesheet">
 
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"> </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
@@ -20,9 +20,672 @@
         :root {
             --primary-color: #3b82f6;
             --primary-hover: #2563eb;
+            --secondary-color: #64748b;
+            --background-color: #fafafa;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-sub: #64748b;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --radius: 12px;
+        }
 
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-main);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeUp 0.6s ease-out;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.25rem;
+            color: var(--text-main);
+            margin: 0 0 0.5rem 0;
+            letter-spacing: -0.025em;
+        }
+
+        p.subtitle {
+            font-size: 1rem;
+            color: var(--text-sub);
+            margin: 0;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 2rem;
+            max-width: 1200px;
+            width: 100%;
+            justify-content: center;
+            align-items: flex-start;
+            animation: fadeUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .controls-panel,
+        .canvas-panel {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .controls-panel:hover,
+        .canvas-panel:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .controls-panel {
+            flex: 1;
+            min-width: 320px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .canvas-panel {
+            flex: 2;
+            min-width: 400px;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 500px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .control-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+
+        .value-badge {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            background: #eff6ff;
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+            margin-top: -6px;
+            transition: transform 0.1s;
+        }
+
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #e2e8f0;
+            border-radius: 2px;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        button {
+            padding: 0.75rem 1rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        button:active:not(:disabled) {
+            transform: scale(0.96);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-hover);
+        }
+
+        .btn-primary:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .btn-full {
+            grid-column: span 2;
+        }
+
+        .steps-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e2e8f0;
+            z-index: 0;
+            transform: translateY(-50%);
+        }
+
+        .step-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .step-dot.active {
+            border-color: var(--primary-color);
+            background: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        .step-dot.completed {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .equation-box {
+            margin-top: auto;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 80px;
+        }
+
+        #equation {
+            font-size: 1.25rem;
+            color: var(--text-main);
+        }
+
+        @media (max-width: 850px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            .canvas-panel {
+                min-height: 400px;
+                min-width: unset;
+            }
         }
     </style>
 </head>
+
+<body>
+
+    <header>
+        <h1>Completing the Square</h1>
+        <p class="subtitle">Visualizing quadratic equations geometrically</p>
+    </header>
+
+    <div class="main-container">
+        <section class="controls-panel">
+
+            <div class="steps-container">
+                <div class="step-dot active" id="dot-1"></div>
+                <div class="step-dot" id="dot-2"></div>
+                <div class="step-dot" id="dot-3"></div>
+                <div class="step-dot" id="dot-4"></div>
+            </div>
+
+            <div class="control-group">
+                <div class="control-header">
+                    <label for="b-slider">Coefficient b</label>
+                    <span id="b-value" class="value-badge">80</span>
+                </div>
+                <input type="range" id="b-slider" min="20" max="150" value="80" step="2">
+            </div>
+
+            <div class="control-group">
+                <div class="control-header">
+                    <label for="x-slider">Square Size x</label>
+                    <span id="x-value" class="value-badge">150</span>
+                </div>
+                <input type="range" id="x-slider" min="80" max="200" value="150" step="5">
+            </div>
+
+            <div class="actions">
+                <button id="stepButton" class="btn-primary" onclick="nextStep()">
+                    Next Step
+                </button>
+                <button id="resetButton" class="btn-secondary" onclick="resetSketch()">
+                    Reset
+                </button>
+                <button id="autoPlayButton" class="btn-secondary btn-full" onclick="toggleAutoPlay()">
+                    ▶ Auto Play
+                </button>
+            </div>
+
+            <div class="equation-box">
+                <div id="equation"></div>
+            </div>
+        </section>
+
+        <section class="canvas-panel">
+            <div id="p5-canvas-container"></div>
+        </section>
+    </div>
+
+    <script>
+        let x_size = 150;
+        let b = 80;
+
+        let step = 1;
+
+        let animationState = 0;
+        let animProgress = 0;
+        let transitionTargetStep = 1;
+
+        let isAutoPlaying = false;
+        let autoPlayTimer = null;
+
+        const colors = {
+            blue: '#60a5fa',
+            purple: '#a78bfa',
+            red: '#f87171',
+            green: '#34d399',
+            text: '#334155'
+        };
+
+        function setup() {
+            let canvas = createCanvas(500, 450);
+            canvas.parent('p5-canvas-container');
+            smooth();
+
+            const bSlider = document.getElementById('b-slider');
+            bSlider.oninput = function () {
+                b = parseFloat(this.value);
+                document.getElementById('b-value').innerText = b;
+                if (!animationState) redraw();
+                updateEquation();
+            };
+
+            const xSlider = document.getElementById('x-slider');
+            xSlider.oninput = function () {
+                x_size = parseFloat(this.value);
+                document.getElementById('x-value').innerText = x_size;
+                if (!animationState) redraw();
+                updateEquation();
+            };
+
+            updateEquation();
+            updateStepDots();
+        }
+
+        function draw() {
+            background(255);
+
+            if (animationState === 1) {
+                animProgress += 0.04;
+                if (animProgress >= 1) {
+                    animProgress = 1;
+                    animationState = 0;
+                    step = transitionTargetStep;
+                    updateUI();
+
+                    if (isAutoPlaying) {
+                        if (step < 4) {
+
+                        } else if (step === 4) {
+                            toggleAutoPlay();
+                        }
+                    }
+                }
+            }
+
+            let t = easeInOutQuart(animProgress);
+
+            let totalW = x_size + b;
+            let startX = (width - totalW) / 2 + (b / 4);
+            let startY = (height - totalW) / 2 + (b / 4);
+            let b_half = b / 2;
+
+            noStroke();
+            textAlign(CENTER, CENTER);
+            textSize(18);
+            textStyle(BOLD);
+
+            fill(colors.blue);
+            rect(startX, startY, x_size, x_size, 4);
+            fill(colors.text);
+            text('x²', startX + x_size / 2, startY + x_size / 2);
+
+            let bx_w = b / 2;
+            let bx_h = x_size;
+            let s1_x = startX + x_size;
+            let s1_y = startY;
+
+            fill(colors.purple);
+            rect(s1_x, s1_y, bx_w, bx_h, 4);
+            fill(colors.text);
+            text('bx/2', s1_x + bx_w / 2, s1_y + bx_h / 2);
+
+            let s2_start_x = startX + x_size + bx_w;
+            let s2_start_y = startY;
+            let s2_end_x = startX;
+            let s2_end_y = startY + x_size;
+
+            let isMoving = (step === 1 && transitionTargetStep === 2 && animationState === 1);
+
+            if (step === 1 && !isMoving) {
+                fill(colors.purple);
+                rect(s2_start_x, s2_start_y, bx_w, bx_h, 4);
+                fill(colors.text);
+                text('bx/2', s2_start_x + bx_w / 2, s2_start_y + bx_h / 2);
+
+            } else if (isMoving) {
+                let startCX = s2_start_x + bx_w / 2;
+                let startCY = s2_start_y + bx_h / 2;
+                let endCX = s2_end_x + x_size / 2;
+                let endCY = s2_end_y + bx_w / 2;
+
+                let curCX = lerp(startCX, endCX, t);
+                let curCY = lerp(startCY, endCY, t);
+                let curAngle = lerp(0, HALF_PI, t);
+
+                push();
+                translate(curCX, curCY);
+                rotate(curAngle);
+                rectMode(CENTER);
+                fill(colors.purple);
+                rect(0, 0, bx_w, bx_h, 4);
+                pop();
+
+            } else {
+                fill(colors.purple);
+                rect(s2_end_x, s2_end_y, x_size, bx_w, 4);
+                fill(colors.text);
+                text('bx/2', s2_end_x + x_size / 2, s2_end_y + bx_w / 2);
+            }
+
+            let m_x = startX + x_size;
+            let m_y = startY + x_size;
+            let m_size = b_half;
+
+            let showOutline = false;
+            let outlineAlpha = 0;
+
+            if (step === 3 || (step === 2 && transitionTargetStep === 3)) {
+                showOutline = true;
+                if (animationState === 1 && transitionTargetStep === 3) {
+                    outlineAlpha = lerp(0, 255, t);
+                } else {
+                    outlineAlpha = 255;
+                }
+            } else if (step === 4) {
+                showOutline = false;
+            }
+
+            if (showOutline) {
+                let c_ghost = color(colors.red);
+                c_ghost.setAlpha(100 * (outlineAlpha / 255));
+
+                fill(c_ghost);
+                let c_stroke = color(colors.red);
+                c_stroke.setAlpha(outlineAlpha);
+                stroke(c_stroke);
+                strokeWeight(2);
+
+                rect(m_x, m_y, m_size, m_size, 4);
+
+                noStroke();
+                fill(c_stroke);
+                textSize(14);
+                text('?', m_x + m_size / 2, m_y + m_size / 2);
+            }
+
+            if (step === 4 || (step === 3 && transitionTargetStep === 4)) {
+                let fillAlpha = 255;
+                let fillColor = color(colors.green);
+
+                if (animationState === 1 && transitionTargetStep === 4) {
+                    fillAlpha = lerp(0, 255, t);
+                }
+
+                fillColor.setAlpha(fillAlpha);
+                fill(fillColor);
+                rect(m_x, m_y, m_size, m_size, 4);
+
+                fill(colors.text);
+                textSize(14);
+                let textCol = color(colors.text);
+                textCol.setAlpha(fillAlpha);
+                fill(textCol);
+                text((b_half.toFixed(1)) + '²', m_x + m_size / 2, m_y + m_size / 2);
+            }
+
+            drawLabels(startX, startY, x_size, b_half);
+        }
+
+        function drawLabels(x, y, w, b_h) {
+            fill(150);
+            textSize(12);
+            textStyle(NORMAL);
+
+            if (step >= 1) {
+                textAlign(CENTER, BOTTOM);
+                text('x', x + w / 2, y - 5);
+                textAlign(RIGHT, CENTER);
+                text('x', x - 8, y + w / 2);
+            }
+
+            if (step >= 3 || (step === 2 && transitionTargetStep === 3 && animationState === 1)) {
+                let alpha = 255;
+                if (transitionTargetStep === 3 && animationState === 1) alpha = lerp(0, 255, easeInOutQuart(animProgress));
+
+                let c = color(150);
+                c.setAlpha(alpha);
+                fill(c);
+            }
+        }
+
+        function easeInOutQuart(x) {
+            return x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2;
+        }
+
+        function nextStep() {
+            if (animationState === 1) return;
+            if (step < 4) {
+                transitionTargetStep = step + 1;
+                animationState = 1;
+                animProgress = 0;
+
+                document.getElementById('stepButton').disabled = true;
+            }
+        }
+
+        function resetSketch() {
+            step = 1;
+            transitionTargetStep = 1;
+            animationState = 0;
+            animProgress = 0;
+            if (isAutoPlaying) toggleAutoPlay();
+            updateUI();
+        }
+
+        function toggleAutoPlay() {
+            const btn = document.getElementById('autoPlayButton');
+            if (isAutoPlaying) {
+                isAutoPlaying = false;
+                clearInterval(autoPlayTimer);
+                btn.innerText = "▶ Auto Play";
+            } else {
+                isAutoPlaying = true;
+                btn.innerText = "⏹ Stop";
+
+                if (step === 4) resetSketch();
+
+                autoPlayTimer = setInterval(() => {
+                    if (!isAutoPlaying) return;
+                    if (animationState === 1) return;
+
+                    if (step < 4) {
+                        nextStep();
+                    } else {
+                        toggleAutoPlay();
+                    }
+                }, 1800);
+
+                if (step === 1 && animationState === 0) nextStep();
+            }
+        }
+
+        function updateUI() {
+            updateEquation();
+            updateButtons();
+            updateStepDots();
+            redraw();
+        }
+
+        function updateButtons() {
+            const btn = document.getElementById('stepButton');
+            if (step === 4) {
+                btn.innerText = "Done";
+                btn.disabled = true;
+            } else {
+                btn.innerText = "Next Step";
+                btn.disabled = false;
+            }
+        }
+
+        function updateStepDots() {
+            for (let i = 1; i <= 4; i++) {
+                let dot = document.getElementById(`dot-${i}`);
+                if (i < step) {
+                    dot.className = 'step-dot completed';
+                    dot.innerHTML = '✓';
+                    dot.style.color = 'white';
+                } else if (i === step) {
+                    dot.className = 'step-dot active';
+                    dot.innerHTML = '';
+                } else {
+                    dot.className = 'step-dot';
+                    dot.innerHTML = '';
+                }
+            }
+        }
+
+        function updateEquation() {
+            const div = document.getElementById('equation');
+            let b_val = b.toFixed(0);
+            let b_half = (b / 2).toFixed(1);
+
+            let s = (animationState === 1) ? transitionTargetStep : step;
+
+            let tex = "";
+            if (s === 1) {
+                tex = `x^2 + ${b_val}x`;
+            } else if (s === 2) {
+                tex = `x^2 + \\frac{${b_val}}{2}x + \\frac{${b_val}}{2}x`;
+            } else if (s === 3) {
+                tex = `x^2 + ${b_val}x + \\color{#f87171}{?}`;
+            } else if (s === 4) {
+                tex = `(x + ${b_half})^2 = x^2 + ${b_val}x + \\color{#34d399}{${b_half}^2}`;
+            }
+
+            div.innerHTML = `\\[ ${tex} \\]`;
+            if (window.MathJax) {
+                MathJax.typesetPromise([div]);
+            }
+        }
+    </script>
+</body>
 
 </html>
